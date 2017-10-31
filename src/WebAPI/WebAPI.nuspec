@@ -8,7 +8,7 @@
         <owners>Valdis Zobēla</owners>
         <description>Implementation of HMAC based security mechanisms for HttpClient/WebAPI.</description>
         <dependencies>
-            <dependency id="Security.HMAC.Core" version="[0.1.0-beta5,)" />
+            <dependency id="Security.HMAC.Core" version="$coreDependencyVersion$" />
         </dependencies>
     </metadata>
     <files>

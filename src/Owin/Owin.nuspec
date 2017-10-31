@@ -9,7 +9,7 @@
         <description>Implementation of HMAC based security mechanisms for OWIN.</description>
         <dependencies>
             <dependency id="Microsoft.Owin" version="[3.0.0,)" />
-            <dependency id="Security.HMAC.Core" version="[0.1.0-beta5,)" />
+            <dependency id="Security.HMAC.Core" version="$coreDependencyVersion$" />
         </dependencies>
     </metadata>
     <files>
