@@ -8,5 +8,6 @@ namespace Security.HMAC
         public const string Date = "Date";
         public const string XAppId = "X-HMAC-AppId";
         public const string XNonce = "X-HMAC-Nonce";
+        public const string XOriginalUrl = "X-Original-URL";
     }
 }

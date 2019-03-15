@@ -35,6 +35,10 @@ namespace Security.HMAC
             {
                 string contentMd5 = h.Get(Headers.ContentMD5);
                 var builder = new CannonicalRepresentationBuilder();
+
+                var url = h.Get(Headers.XOriginalUrl);
+                url = string.IsNullOrWhiteSpace(url) ? req.GetEncodedUrl() : $"https://{req.Host.Host}{url}";
+
                 var content = builder.BuildRepresentation(
                     nonce,
                     appId,
@@ -43,7 +47,7 @@ namespace Security.HMAC
                     req.Headers.Get("Accept"),
                     contentMd5 == null ? null : Convert.FromBase64String(contentMd5),
                     date,
-                    new Uri(req.GetEncodedUrl()));
+                    new Uri(url));
 
                 SecureString secret;
                 if (content != null && (secret = secretRepository.GetSecret(appId)) != null)
