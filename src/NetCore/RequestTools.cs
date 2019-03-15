@@ -45,10 +45,10 @@ namespace Security.HMAC
                 else if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 {
                     // there was rewrite, and original URL is saved as relative
-                    var protocol = h.Get(Headers.XForwardedProto)
-                        ?? h.Get(Headers.XForwardedProtocol)
-                        ?? h.Get(Headers.XUrlScheme)
-                        ?? requestProtocol;
+                    var protocol = h.Get(Headers.XForwardedProto);
+                    if (string.IsNullOrWhiteSpace(protocol)) protocol = h.Get(Headers.XForwardedProtocol);
+                    if (string.IsNullOrWhiteSpace(protocol)) protocol = h.Get(Headers.XUrlScheme);
+                    if (string.IsNullOrWhiteSpace(protocol)) protocol = requestProtocol;
 
                     url = $"{protocol}://{req.Host.Host}{url}";
                 }
