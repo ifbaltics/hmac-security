@@ -9,7 +9,7 @@ namespace Security.HMAC
 
     internal static class RequestTools
     {
-        internal static bool Validate(HttpRequest req, ISigningAlgorithm algorithm, IAppSecretRepository secretRepository, ITime time, TimeSpan clockSkew)
+        internal static bool Validate(HttpRequest req, ISigningAlgorithm algorithm, IAppSecretRepository secretRepository, ITime time, TimeSpan clockSkew, string requestProtocol = "https")
         {
             var h = req.Headers;
 
@@ -48,7 +48,7 @@ namespace Security.HMAC
                     var protocol = h.Get(Headers.XForwardedProto)
                         ?? h.Get(Headers.XForwardedProtocol)
                         ?? h.Get(Headers.XUrlScheme)
-                        ?? "https"; // todo: add protocol from parameters
+                        ?? requestProtocol;
 
                     url = $"{protocol}://{req.Host.Host}{url}";
                 }

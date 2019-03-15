@@ -13,6 +13,7 @@
                 new HmacSigningAlgorithm(secret => new HMACSHA256(secret)), opts =>
                 {
                     opts.ClockSkew = TimeSpan.Parse(configurationSection.GetValue<string>("ClockSkew"));
+                    opts.RequestProtocol = configurationSection.GetValue<string>("RequestProtocol");
                 });
         }
 

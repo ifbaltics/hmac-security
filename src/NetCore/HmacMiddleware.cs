@@ -33,7 +33,8 @@
                 algorithm,
                 secretRepository,
                 time,
-                options.Value.ClockSkew))
+                options.Value.ClockSkew,
+                options.Value.RequestProtocol))
             {
                 var res = context.Response;
                 res.StatusCode = 401;
