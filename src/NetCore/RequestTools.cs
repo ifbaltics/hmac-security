@@ -36,8 +36,22 @@ namespace Security.HMAC
                 string contentMd5 = h.Get(Headers.ContentMD5);
                 var builder = new CannonicalRepresentationBuilder();
 
-                var url = h.Get(Headers.XOriginalUrl);
-                url = string.IsNullOrWhiteSpace(url) ? req.GetEncodedUrl() : $"https://{req.Host.Host}{url}";
+                // Handling request possibly coming from rewrite
+                var url = h.Get(Headers.XOriginalUrl); // Original URL before rewrite
+                if (string.IsNullOrWhiteSpace(url))
+                {
+                    url = req.GetEncodedUrl(); // no rewrite, use URL from req
+                }
+                else if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                {
+                    // there was rewrite, and original URL is saved as relative
+                    var protocol = h.Get(Headers.XForwardedProto)
+                        ?? h.Get(Headers.XForwardedProtocol)
+                        ?? h.Get(Headers.XUrlScheme)
+                        ?? "https"; // todo: add protocol from parameters
+
+                    url = $"{protocol}://{req.Host.Host}{url}";
+                }
 
                 var content = builder.BuildRepresentation(
                     nonce,

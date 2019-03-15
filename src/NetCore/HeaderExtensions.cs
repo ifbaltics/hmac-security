@@ -11,5 +11,10 @@ namespace Security.HMAC
                 ? value[0]
                 : null;
         }
+
+        public static bool Contains(this IHeaderDictionary headers, string key)
+        {
+            return headers.TryGetValue(key, out var value);
+        }
     }
 }
