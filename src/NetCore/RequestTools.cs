@@ -1,7 +1,6 @@
 namespace Security.HMAC
 {
     using System;
-    using System.Net;
     using System.Net.Http.Headers;
     using System.Security;
     using Microsoft.AspNetCore.Http;
@@ -9,7 +8,7 @@ namespace Security.HMAC
 
     internal static class RequestTools
     {
-        internal static bool Validate(HttpRequest req, ISigningAlgorithm algorithm, IAppSecretRepository secretRepository, ITime time, TimeSpan clockSkew, string requestProtocol = "https", string url_ = null)
+        internal static bool Validate(HttpRequest req, ISigningAlgorithm algorithm, IAppSecretRepository secretRepository, ITime time, TimeSpan clockSkew, string requestProtocol = "https", string host_ = null)
         {
             var h = req.Headers;
 
@@ -37,7 +36,7 @@ namespace Security.HMAC
                 var builder = new CannonicalRepresentationBuilder();
 
                 // Handling request possibly coming from rewrite
-                var url = url_ ??  h.Get(Headers.XOriginalUrl); // Original URL before rewrite
+                var url = h.Get(Headers.XOriginalUrl); // Original URL before rewrite
                 if (string.IsNullOrWhiteSpace(url))
                 {
                     url = req.GetEncodedUrl(); // no rewrite, use URL from req
@@ -50,7 +49,9 @@ namespace Security.HMAC
                     if (string.IsNullOrWhiteSpace(protocol)) protocol = h.Get(Headers.XUrlScheme);
                     if (string.IsNullOrWhiteSpace(protocol)) protocol = requestProtocol;
 
-                    url = $"{protocol}://{req.Host.Host}{url}";
+                    var host = host_ ?? req.Host.Host;
+
+                    url = $"{protocol}://{host}{url}";
                 }
 
                 var content = builder.BuildRepresentation(
