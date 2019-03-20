@@ -9,7 +9,7 @@ namespace Security.HMAC
 
     internal static class RequestTools
     {
-        internal static bool Validate(HttpRequest req, ISigningAlgorithm algorithm, IAppSecretRepository secretRepository, ITime time, TimeSpan clockSkew, string requestProtocol = "https")
+        internal static bool Validate(HttpRequest req, ISigningAlgorithm algorithm, IAppSecretRepository secretRepository, ITime time, TimeSpan clockSkew, string requestProtocol = "https", string url_ = null)
         {
             var h = req.Headers;
 
@@ -37,7 +37,7 @@ namespace Security.HMAC
                 var builder = new CannonicalRepresentationBuilder();
 
                 // Handling request possibly coming from rewrite
-                var url = h.Get(Headers.XOriginalUrl); // Original URL before rewrite
+                var url = url_ ??  h.Get(Headers.XOriginalUrl); // Original URL before rewrite
                 if (string.IsNullOrWhiteSpace(url))
                 {
                     url = req.GetEncodedUrl(); // no rewrite, use URL from req

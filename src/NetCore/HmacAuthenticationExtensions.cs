@@ -14,6 +14,7 @@
                 {
                     opts.ClockSkew = TimeSpan.Parse(configurationSection.GetValue<string>("ClockSkew"));
                     opts.RequestProtocol = configurationSection.GetValue<string>("RequestProtocol");
+                    opts.Url = configurationSection.GetValue<string>("Url");
                 });
         }
 

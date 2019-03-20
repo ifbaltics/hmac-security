@@ -6,5 +6,6 @@
     {
         public TimeSpan ClockSkew { get; set; }
         public string RequestProtocol { get; set; }
+        public string Url { get; set; }
     }
 }

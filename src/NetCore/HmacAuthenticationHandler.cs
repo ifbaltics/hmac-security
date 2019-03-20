@@ -33,7 +33,7 @@
                 return Task.FromResult(AuthenticateResult.Fail("Missing Authorization Header"));
 
 
-            if (RequestTools.Validate(Request, this.algorithm, this.secretRepository, this.time, Options.ClockSkew, Options.RequestProtocol))
+            if (RequestTools.Validate(Request, this.algorithm, this.secretRepository, this.time, Options.ClockSkew, Options.RequestProtocol, Options.Url))
             {
                 var claims = new[] { new Claim("Application", RequestTools.GetAppId(Request)) };
                 var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, Scheme.Name));
