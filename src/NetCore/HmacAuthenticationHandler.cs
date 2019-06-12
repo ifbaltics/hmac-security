@@ -1,47 +1,65 @@
-﻿namespace Security.HMAC
+﻿using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+
+namespace Security.HMAC
 {
-    using System;
-    using System.Security.Claims;
-    using System.Text.Encodings.Web;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
-    using Microsoft.AspNetCore.Authentication;
-    public class HmacAuthenticationHandler : AuthenticationHandler<HmacAuthenticationHandlerOptions>
+    public class HmacAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        private readonly ISigningAlgorithm algorithm;
-        private readonly IAppSecretRepository secretRepository;
-        private readonly ITime time;
+        private readonly IHmacAuthenticationService authenticationService;
+
         public HmacAuthenticationHandler(
-            IOptionsMonitor<HmacAuthenticationHandlerOptions> options,
+            IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
-            ISigningAlgorithm algorithm,
-            IAppSecretRepository secretRepository,
-            ITime time)
+            IHmacAuthenticationService authenticationService)
             : base(options, logger, encoder, clock)
         {
-            this.algorithm = algorithm;
-            this.secretRepository = secretRepository;
-            this.time = time;
+            this.authenticationService = authenticationService;
         }
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        protected override Task<AuthenticateResult> HandleAuthenticateAsync() => Task.FromResult(HandleAuthenticate());
+
+        private AuthenticateResult HandleAuthenticate()
         {
-            if (!Request.Headers.ContainsKey(Headers.Authorization))
-                return Task.FromResult(AuthenticateResult.Fail("Missing Authorization Header"));
-
-
-            if (RequestTools.Validate(Request, this.algorithm, this.secretRepository, this.time, Options.ClockSkew, Options.RequestProtocol, Options.Host))
+            try
             {
-                var claims = new[] { new Claim("Application", RequestTools.GetAppId(Request)) };
-                var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, Scheme.Name));
-                var ticket = new AuthenticationTicket(principal, Scheme.Name);
-                return Task.FromResult(AuthenticateResult.Success(ticket));
+                return ShouldAuthenticate(Request.Headers)
+                    ? Authenticate()
+                    : AuthenticateResult.NoResult();
             }
+            catch (HmacAuthenticationException e)
+            {
+                return AuthenticateResult.Fail(e);
+            }
+        }
 
-            return Task.FromResult(AuthenticateResult.Fail("Authentication failed"));
+        private AuthenticateResult Authenticate()
+        {
+            HmacAuthenticationResult auth = authenticationService.Authenticate(Request.ToRequestMessage());
+
+            var claims = new[] { new Claim(ClaimTypes.NameIdentifier, auth.AppId) };
+            ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity(claims, Scheme.Name));
+            AuthenticationTicket ticket = new AuthenticationTicket(principal, Scheme.Name);
+
+            return AuthenticateResult.Success(ticket);
+        }
+
+        private static bool ShouldAuthenticate(IHeaderDictionary headers)
+        {
+            if (false == headers.TryGetValue(Headers.Authorization, out StringValues header))
+                return false;
+
+            var authorizationHeader = AuthenticationHeaderValue.Parse(header);
+
+            return authorizationHeader.Scheme == Schemas.HMAC;
         }
     }
 }

@@ -1,23 +1,14 @@
-﻿namespace Security.HMAC
-{
-    using System;
-    using Microsoft.Owin.Security;
+﻿using Microsoft.Owin.Security;
 
+namespace Security.HMAC
+{
     public class HmacAuthenticationOptions : AuthenticationOptions
     {
-        public HmacAuthenticationOptions(ISigningAlgorithm algorithm, IAppSecretRepository appSecretRepository, string signInAsAuthenticationType = Schemas.HMAC)
-            : base(Schemas.HMAC)
-        {
-            Algorithm = algorithm;
-            AppSecretRepository = appSecretRepository;
-            SignInAsAuthenticationType = signInAsAuthenticationType;
-        }
+        public readonly HmacOptions Hmac;
 
-        public ISigningAlgorithm Algorithm { get; set; }
-        public IAppSecretRepository AppSecretRepository { get; set; }
-        public ITime Time { get; set; } = SystemTime.Instance;
-        public TimeSpan Tolerance { get; set; } = Constants.DefaultTolerance;
-        public MapUserClaimsDelegate MapClaims { get; set; }
-        public string SignInAsAuthenticationType { get; set; }
+        public HmacAuthenticationOptions(HmacOptions options) : base(Schemas.HMAC)
+        {
+            Hmac = options;
+        }
     }
 }

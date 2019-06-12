@@ -1,36 +1,41 @@
-﻿namespace Security.HMAC
-{
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
-    using Microsoft.Owin;
+﻿using System.Threading.Tasks;
+using Microsoft.Owin;
 
+namespace Security.HMAC
+{
     public class HmacMiddleware : OwinMiddleware
     {
-        private readonly HmacMiddlewareOptions options;
+        private readonly IHmacAuthenticationService authenticationService;
 
-        public HmacMiddleware(OwinMiddleware next, HmacMiddlewareOptions options)
+        public HmacMiddleware(OwinMiddleware next, HmacOptions middlewareOptions)
             : base(next)
         {
-            this.options = options;
+            authenticationService = HmacAuthenticationService.Create(middlewareOptions);
         }
 
         public override async Task Invoke(IOwinContext context)
         {
-            if (RequestTools.Validate(
-                context.Request,
-                options.Algorithm,
-                options.AppSecretRepository,
-                options.Time,
-                options.Tolerance))
+            if (Authenticated(context))
             {
                 await Next.Invoke(context);
             }
             else
             {
-                var res = context.Response;
-                res.StatusCode = 401;
-                res.Headers.Append(Headers.WWWAuthenticate, Schemas.HMAC);
+                context.Response.StatusCode = 401;
+                context.Response.Headers.Append(Headers.WWWAuthenticate, Schemas.HMAC);
+            }
+        }
+
+        private bool Authenticated(IOwinContext context)
+        {
+            try
+            {
+                authenticationService.Authenticate(context.Request.ToRequestMessage());
+                return true;
+            }
+            catch (HmacAuthenticationException)
+            {
+                return false;
             }
         }
     }
