@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Tests</RootNamespace>
     <AssemblyName>Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -69,7 +69,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="CannonicalRepresentationBuilderFacts.cs" />
     <Compile Include="Hmac256SigningAlgorithmFacts.cs" />
     <Compile Include="HmacClientHandlerFacts.cs" />
     <Compile Include="SecureStringFacts.cs" />
@@ -80,12 +79,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\Core\Core.csproj">
-      <Project>{b65549a2-4991-424f-bd60-8e51857ef22e}</Project>
-      <Name>HMAC.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\src\WebAPI\WebAPI.csproj">
-      <Project>{1949f09c-078b-4fe0-b911-bf00f03fe7ea}</Project>
-      <Name>HMAC.WebAPI</Name>
+      <Project>{c3993538-18b1-4e9e-b02a-70b24986c003}</Project>
+      <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

@@ -19,13 +19,8 @@ namespace Security.HMAC
             ISigningAlgorithm signingAlgorithm,
             INonceGenerator nonceGenerator = null,
             ITime time = null)
-        {
-            this.appId = appId;
-            this.secret = secret;
-            this.signingAlgorithm = signingAlgorithm;
-            this.nonceGenerator = nonceGenerator ?? GuidNonceGenerator.Instance;
-            this.time = time ?? SystemTime.Instance;
-        }
+            : this(new HttpClientHandler(), appId, secret, signingAlgorithm, nonceGenerator, time)
+        { }
 
         public HmacClientHandler(
             HttpMessageHandler innerHandler,
@@ -48,18 +43,19 @@ namespace Security.HMAC
             var nonce = nonceGenerator.NextNonce;
             var timestamp = time.UtcNow;
 
-            var builder = new CannonicalRepresentationBuilder();
-            var content = builder.BuildRepresentation(
-                nonce,
-                appId,
-                request.Method.Method,
-                request.Content?.Headers?.ContentType?.ToString(),
-                string.Join(", ", request.Headers.Accept),
-                request.Content?.Headers?.ContentMD5,
-                timestamp,
-                request.RequestUri);
+            var content = new HmacSignatureContent
+            {
+                Nonce = nonce,
+                AppId = appId,
+                Date = timestamp,
+                Method = request.Method.Method,
+                Accepts = string.Join(", ", request.Headers.Accept),
+                ContentType = request.Content?.Headers?.ContentType?.ToString(),
+                ContentMd5 = request.Content?.Headers?.ContentMD5,
+                Uri = request.RequestUri
+            };
 
-            var signature = signingAlgorithm.Sign(secret, content);
+            var signature = signingAlgorithm.Sign(secret, content.ToCanonicalString());
 
             request.Headers.Authorization = new AuthenticationHeaderValue(Schemas.HMAC, signature);
             request.Headers.Add(Headers.XAppId, appId);

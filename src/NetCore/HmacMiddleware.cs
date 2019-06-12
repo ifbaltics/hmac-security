@@ -1,50 +1,52 @@
-﻿namespace Security.HMAC
-{
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Options;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
+namespace Security.HMAC
+{
     public class HmacMiddleware
     {
+        private readonly IHmacAuthenticationService authenticationService;
+        private readonly ILoggerFactory loggerFactory;
+        private readonly RequestDelegate next;
+
         public HmacMiddleware(
             RequestDelegate next,
-            IOptions<HmacMiddlewareOptions> options,
-            ISigningAlgorithm algorithm,
-            IAppSecretRepository secretRepository,
-            ITime time)
+            IHmacAuthenticationService authenticationService,
+            ILoggerFactory loggerFactory)
         {
-            this.options = options;
             this.next = next;
-            this.algorithm = algorithm;
-            this.secretRepository = secretRepository;
-            this.time = time;
+            this.authenticationService = authenticationService;
+            this.loggerFactory = loggerFactory;
         }
-
-        private readonly ISigningAlgorithm algorithm;
-        private readonly IAppSecretRepository secretRepository;
-        private readonly ITime time;
-        private readonly IOptions<HmacMiddlewareOptions> options;
-        private readonly RequestDelegate next;
 
         public async Task Invoke(HttpContext context)
         {
-            if (!RequestTools.Validate(
-                context.Request,
-                algorithm,
-                secretRepository,
-                time,
-                options.Value.ClockSkew,
-                options.Value.RequestProtocol,
-                options.Value.Host))
+            if (Authenticated(context))
             {
-                var res = context.Response;
-                res.StatusCode = 401;
-                res.Headers.Append(Headers.WWWAuthenticate, Schemas.HMAC);
-
-                return;
+                await next(context);
             }
+            else
+            {
+                context.Response.StatusCode = 401;
+                context.Response.Headers.Append(Headers.WWWAuthenticate, Schemas.HMAC);
+            }
+        }
 
-            await next(context);
+        public bool Authenticated(HttpContext context)
+        {
+            try
+            {
+                authenticationService.Authenticate(context.Request.ToRequestMessage());
+                return true;
+            }
+            catch (HmacAuthenticationException e)
+            {
+                loggerFactory.CreateLogger<HmacMiddleware>()
+                    .LogInformation(e, $"HMAC authentication failed: {e.Message}");
+
+                return false;
+            }
         }
     }
 }

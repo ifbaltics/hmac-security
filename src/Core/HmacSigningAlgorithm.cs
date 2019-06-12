@@ -7,6 +7,11 @@ namespace Security.HMAC
 
     public delegate HMAC HmacAlgorithmFactory(byte[] secretBytes);
 
+    public interface ISigningAlgorithm
+    {
+        string Sign(SecureString secret, string content);
+    }
+
     public sealed class HmacSigningAlgorithm : ISigningAlgorithm
     {
         private readonly HmacAlgorithmFactory algorithmFactory;

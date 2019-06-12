@@ -1,9 +1,9 @@
-﻿namespace Security.HMAC
-{
-    using System.Collections.Concurrent;
-    using System.Security;
-    using Microsoft.Extensions.Configuration;
+﻿using System.Collections.Concurrent;
+using System.Security;
+using Microsoft.Extensions.Configuration;
 
+namespace Security.HMAC
+{
     public class SecretsFromConfig : IAppSecretRepository
     {
         public SecretsFromConfig(IConfigurationSection secretsSection)

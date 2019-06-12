@@ -22,12 +22,12 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <Import Project="..\Shared\Shared.projitems" Label="Shared" />
-
-  <Import Project="..\Shared.Core\Shared.Core.projitems" Label="Shared" />
-
   <ItemGroup>
     <PackageReference Include="System.Security.SecureString" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
 </Project>

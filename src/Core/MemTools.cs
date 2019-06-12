@@ -2,7 +2,6 @@ namespace Security.HMAC
 {
     public static class MemTools
     {
-
         public static unsafe bool Equals(byte* b0, byte* b1, int length)
         {
             byte* lastAddr = b0 + length;
