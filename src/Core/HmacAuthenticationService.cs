@@ -1,8 +1,6 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security;
-using System.Security.Cryptography;
 
 namespace Security.HMAC
 {
@@ -38,10 +36,11 @@ namespace Security.HMAC
             dateValidator.Validate(signatureContent.Date);
 
             SecureString secret = GetAppSecret(signatureContent.AppId);
-            string signature = algorithm.Sign(secret, signatureContent.ToCanonicalString());
+            string signatureSrc = signatureContent.ToCanonicalString();
+            string signature = algorithm.Sign(secret, signatureSrc);
 
             if (signature != clientSignature)
-                throw new HmacAuthenticationException("Signature mismatch");
+                throw new HmacAuthenticationException($"Signature mismatch. Signature src: '{signatureSrc}'");
 
             return new HmacAuthenticationResult(signatureContent.AppId);
         }
