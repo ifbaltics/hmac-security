@@ -59,13 +59,5 @@ namespace Security.HMAC
             ss.MakeReadOnly();
             return ss;
         }
-
-        private static void Zero(IntPtr ptr, int len)
-        {
-            for (int i = 0; i < len; i++)
-            {
-                Marshal.WriteByte(ptr, i, 0);
-            }
-        }
     }
 }
