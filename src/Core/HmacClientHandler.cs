@@ -13,27 +13,33 @@ namespace Security.HMAC
         private readonly INonceGenerator nonceGenerator;
         private readonly ITime time;
 
+        // for service collection
         public HmacClientHandler(
             string appId,
             SecureString secret,
-            ISigningAlgorithm signingAlgorithm,
+            ISigningAlgorithm signingAlgorithm = null,
             INonceGenerator nonceGenerator = null,
             ITime time = null)
-            : this(new HttpClientHandler(), appId, secret, signingAlgorithm, nonceGenerator, time)
-        { }
+        {
+            this.appId = appId;
+            this.secret = secret;
+            this.signingAlgorithm = signingAlgorithm ?? HmacSigningAlgorithm.Default;
+            this.nonceGenerator = nonceGenerator ?? GuidNonceGenerator.Instance;
+            this.time = time ?? SystemTime.Instance;
+        }
 
         public HmacClientHandler(
             HttpMessageHandler innerHandler,
             string appId,
             SecureString secret,
-            ISigningAlgorithm signingAlgorithm,
+            ISigningAlgorithm signingAlgorithm = null,
             INonceGenerator nonceGenerator = null,
             ITime time = null)
             : base(innerHandler)
         {
             this.appId = appId;
             this.secret = secret;
-            this.signingAlgorithm = signingAlgorithm;
+            this.signingAlgorithm = signingAlgorithm ?? HmacSigningAlgorithm.Default;
             this.nonceGenerator = nonceGenerator ?? GuidNonceGenerator.Instance;
             this.time = time ?? SystemTime.Instance;
         }

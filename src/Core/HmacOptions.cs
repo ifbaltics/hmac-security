@@ -7,7 +7,7 @@ namespace Security.HMAC
     {
         public IAppSecretRepository AppSecretRepository { get; }
         
-        public HmacSigningAlgorithm Algorithm { get; set; } = new HmacSigningAlgorithm(sb => new HMACSHA256(sb));
+        public HmacSigningAlgorithm Algorithm { get; set; } = HmacSigningAlgorithm.Default;
         public ITime Time { get; set; } = new SystemTime();
         public TimeSpan ClockSkew { get; set; } = TimeSpan.FromSeconds(30);
         public string RequestProtocol { get; set; }

@@ -14,6 +14,8 @@ namespace Security.HMAC
 
     public sealed class HmacSigningAlgorithm : ISigningAlgorithm
     {
+        public static readonly HmacSigningAlgorithm Default = new HmacSigningAlgorithm(sb => new HMACSHA256(sb));
+
         private readonly HmacAlgorithmFactory algorithmFactory;
 
         public HmacSigningAlgorithm(HmacAlgorithmFactory algorithmFactory)
