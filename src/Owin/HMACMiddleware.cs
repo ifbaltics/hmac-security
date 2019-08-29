@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Owin;
 
 namespace Security.HMAC
@@ -30,7 +32,7 @@ namespace Security.HMAC
         {
             try
             {
-                authenticationService.Authenticate(context.Request.ToRequestMessage());
+                authenticationService.Authenticate(context.Request.ToRequestInfo());
                 return true;
             }
             catch (HmacAuthenticationException)

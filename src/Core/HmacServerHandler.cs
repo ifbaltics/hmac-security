@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -38,7 +40,8 @@ namespace Security.HMAC
         {
             try
             {
-                authenticationService.Authenticate(request);
+                authenticationService.Authenticate(request.ToRequestInfo());
+
                 return true;
             }
             catch (HmacAuthenticationException)

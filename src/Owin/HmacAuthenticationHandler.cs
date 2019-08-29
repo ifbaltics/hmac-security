@@ -28,7 +28,7 @@ namespace Security.HMAC
 
         private AuthenticationTicket Authenticate()
         {
-            HmacAuthenticationResult result = authenticationService.Authenticate(Request.ToRequestMessage());
+            HmacAuthenticationResult result = authenticationService.Authenticate(Request.ToRequestInfo());
 
             Claim claim = new Claim(ClaimTypes.NameIdentifier, result.AppId);
 

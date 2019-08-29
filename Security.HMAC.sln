@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facts", "facts\Facts.csproj", "{A607775D-2BD7-49B7-8F0C-BDA3EE7B6435}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Owin", "src\Owin\Owin.csproj", "{3F4CDE5A-7667-46B1-B1C9-1D2A60A8591E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Owin", "src\Owin\Security.HMAC.Owin.csproj", "{3F4CDE5A-7667-46B1-B1C9-1D2A60A8591E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{8C78583D-66DE-49BC-A331-BDFFE944361B}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "etc", "etc", "{8C78583D-66D
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCore", "src\NetCore\NetCore.csproj", "{BFC57E9A-F737-4011-9EAA-37E5E5016F99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCore", "src\NetCore\Security.HMAC.NetCore.csproj", "{BFC57E9A-F737-4011-9EAA-37E5E5016F99}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\Core\Core.csproj", "{C3993538-18B1-4E9E-B02A-70B24986C003}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\Core\Security.HMAC.Core.csproj", "{C3993538-18B1-4E9E-B02A-70B24986C003}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

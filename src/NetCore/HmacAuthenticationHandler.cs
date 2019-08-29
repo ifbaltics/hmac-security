@@ -43,7 +43,7 @@ namespace Security.HMAC
 
         private AuthenticateResult Authenticate()
         {
-            HmacAuthenticationResult auth = authenticationService.Authenticate(Request.ToRequestMessage());
+            HmacAuthenticationResult auth = authenticationService.Authenticate(Request.ToRequestInfo());
 
             var claims = new[] { new Claim(ClaimTypes.NameIdentifier, auth.AppId) };
             ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity(claims, Scheme.Name));
