@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Security;
 
@@ -6,7 +8,7 @@ namespace Security.HMAC
 {
     public interface IHmacAuthenticationService
     {
-        HmacAuthenticationResult Authenticate(HttpRequestMessage msg);
+        HmacAuthenticationResult Authenticate(HmacRequestInfo req);
     }
 
     public class HmacAuthenticationService : IHmacAuthenticationService
@@ -28,11 +30,11 @@ namespace Security.HMAC
             this.signatureContentResolver = signatureContentResolver;
         }
 
-        public HmacAuthenticationResult Authenticate(HttpRequestMessage msg)
+        public HmacAuthenticationResult Authenticate(HmacRequestInfo req)
         {
-            string clientSignature = ResolveSignature(msg.Headers);
+            string clientSignature = ResolveSignature(req.Headers);
 
-            HmacSignatureContent signatureContent = signatureContentResolver.Resolve(msg);
+            HmacSignatureContent signatureContent = signatureContentResolver.Resolve(req);
             dateValidator.Validate(signatureContent.Date);
 
             SecureString secret = GetAppSecret(signatureContent.AppId);
@@ -55,12 +57,14 @@ namespace Security.HMAC
             return secret;
         }
 
-        private string ResolveSignature(HttpRequestHeaders headers)
+        private string ResolveSignature(ICollection<KeyValuePair<string, string>> headers)
         {
-            AuthenticationHeaderValue header = headers.Authorization;
+            string headerValue = headers.FirstOrDefault(Headers.Authorization);
 
-            if (header == null)
+            if (string.IsNullOrEmpty(headerValue))
                 throw new HmacAuthenticationException("'Authorization' header is not present");
+
+            var header = AuthenticationHeaderValue.Parse(headerValue);
 
             if (header.Scheme != Schemas.HMAC)
                 throw new HmacAuthenticationException($"Invalid authorization schema: '{header.Scheme}'");

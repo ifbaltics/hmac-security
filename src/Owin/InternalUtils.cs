@@ -1,18 +1,17 @@
-using System.Net.Http;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Owin;
 
 namespace Security.HMAC
 {
     internal static class InternalUtils
     {
-        public static HttpRequestMessage ToRequestMessage(this IOwinRequest request)
+        public static HmacRequestInfo ToRequestInfo(this IOwinRequest request)
         {
-            var msg = new HttpRequestMessage(new HttpMethod(request.Method), request.Uri);
-
-            foreach (var header in request.Headers)
-                msg.Headers.TryAddWithoutValidation(header.Key, header.Value);
-
-            return msg;
+             return new HmacRequestInfo(
+                 request.Method, 
+                 request.Uri, 
+                 request.Headers.Select(p => new KeyValuePair<string,string>(p.Key, p.Value.First())).ToList());
         }
     }
 }

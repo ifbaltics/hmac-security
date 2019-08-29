@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Net.Http;
 
 namespace Security.HMAC
 {
     public interface IRequestUrlResolver
     {
-        Uri Resolve(HttpRequestMessage msg);
+        Uri Resolve(HmacRequestInfo msg);
     }
 
     public class RequestUrlResolver : IRequestUrlResolver
@@ -19,7 +18,7 @@ namespace Security.HMAC
             this.overrideHostname = overrideHostname;
         }
 
-        public Uri Resolve(HttpRequestMessage msg)
+        public Uri Resolve(HmacRequestInfo msg)
         {
             string ResolveUrlProtocol()
             {
@@ -32,19 +31,19 @@ namespace Security.HMAC
                 p = msg.Headers.FirstOrDefault(Headers.XUrlScheme);
                 if (p != null) return p;
 
-                return !string.IsNullOrWhiteSpace(overrideScheme) ? overrideScheme : msg.RequestUri.Scheme;
+                return !string.IsNullOrWhiteSpace(overrideScheme) ? overrideScheme : msg.Url.Scheme;
             }
 
             string url = msg.Headers.FirstOrDefault(Headers.XOriginalUrl);
 
             if (url == null)
-                return msg.RequestUri;
+                return msg.Url;
 
             if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 return new Uri(url);
 
             string protocol = ResolveUrlProtocol();
-            string host = string.IsNullOrWhiteSpace(overrideHostname) ? msg.RequestUri.Host : overrideHostname;
+            string host = string.IsNullOrWhiteSpace(overrideHostname) ? msg.Url.Host : overrideHostname;
 
             return new Uri($"{protocol}://{host}{url}");
         }

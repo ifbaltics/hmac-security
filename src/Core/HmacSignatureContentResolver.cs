@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Security.HMAC
 {
     public interface IHmacSignatureContentResolver
     {
-        HmacSignatureContent Resolve(HttpRequestMessage msg);
+        HmacSignatureContent Resolve(HmacRequestInfo req);
     }
 
     public class HmacSignatureContentResolver : IHmacSignatureContentResolver
@@ -18,38 +18,39 @@ namespace Security.HMAC
             this.urlResolver = urlResolver;
         }
 
-        public HmacSignatureContent Resolve(HttpRequestMessage msg)
+        public HmacSignatureContent Resolve(HmacRequestInfo req)
         {
             var request = new HmacSignatureContent
             {
-                Nonce = msg.Headers.Required(Headers.XNonce),
-                AppId = msg.Headers.Required(Headers.XAppId),
-                Date = GetDate(msg.Headers),
-                Method = msg.Method.Method,
-                Accepts = string.Join(", ", msg.Headers.Accept),
-                Uri = urlResolver.Resolve(msg)
+                Method = req.Method,
+                Uri = urlResolver.Resolve(req),
+                Nonce = req.Headers.Required(Headers.XNonce),
+                AppId = req.Headers.Required(Headers.XAppId),
+                Date = GetDate(req.Headers),
+                Accepts = string.Join(", ", req.Headers.All(Headers.Accept)),
+                ContentType = req.Headers.FirstOrDefault(Headers.ContentType),
+                ContentMd5 = Md5(req.Headers)
             };
-
-            if (msg.Content != null)
-            {
-                var contentHeaders = msg.Content.Headers;
-                request.ContentType = contentHeaders.ContentType?.ToString();
-                request.ContentMd5 = contentHeaders.ContentMD5;
-
-                return request;
-            }
 
             return request;
         }
 
-        private static DateTimeOffset GetDate(HttpRequestHeaders headers)
+        private static byte[] Md5(IEnumerable<KeyValuePair<string, string>> headers)
         {
-            var date = headers.Date;
+            var header = headers.FirstOrDefault(Headers.ContentMd5);
+            if (string.IsNullOrEmpty(header)) return null;
 
-            if (!date.HasValue)
-                throw new HmacAuthenticationException("'Date' header is not present");
+            return Convert.FromBase64String(header);
+        }
 
-            return date.Value;
+        private static DateTimeOffset GetDate(IEnumerable<KeyValuePair<string, string>> headers)
+        {
+            var header = headers.Required("Date");
+
+            if (DateTimeOffset.TryParse(header, out DateTimeOffset date) == false)
+                throw new HmacAuthenticationException("'Date' header is not well formatted.");
+
+            return date;
         }
     }
 }

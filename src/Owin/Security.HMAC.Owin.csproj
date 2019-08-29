@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <RootNamespace>Security.HMAC</RootNamespace>
+    <AssemblyName>Security.HMAC.Owin</AssemblyName>
+    <PackageId>Security.HMAC.Owin</PackageId>
+    <Authors>Valdis Zobēla</Authors>
+    <Company>If P&amp;C Insurance AS</Company>
+    <Product>Security.HMAC</Product>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Owin.Security" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Security.HMAC.Core.csproj" />
+  </ItemGroup>
+
+</Project>

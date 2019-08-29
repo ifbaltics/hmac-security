@@ -37,7 +37,7 @@ namespace Security.HMAC
         {
             try
             {
-                authenticationService.Authenticate(context.Request.ToRequestMessage());
+                authenticationService.Authenticate(context.Request.ToRequestInfo());
                 return true;
             }
             catch (HmacAuthenticationException e)
