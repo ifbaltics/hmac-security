@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facts", "facts\Facts.csproj", "{A607775D-2BD7-49B7-8F0C-BDA3EE7B6435}"
 EndProject
@@ -19,19 +19,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore", "src\NetCore\NetCore.csproj", "{BFC57E9A-F737-4011-9EAA-37E5E5016F99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCore", "src\NetCore\NetCore.csproj", "{BFC57E9A-F737-4011-9EAA-37E5E5016F99}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared.Core", "src\Shared.Core\Shared.Core.shproj", "{84788BAC-2797-402B-B31C-E7031ECF0B90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore.Client", "src\NetCore.Client\NetCore.Client.csproj", "{95D3C2F8-47DB-4B8D-B504-DF1873C1DA1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCore.Client", "src\NetCore.Client\NetCore.Client.csproj", "{95D3C2F8-47DB-4B8D-B504-DF1873C1DA1F}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\Shared\Shared.projitems*{1949f09c-078b-4fe0-b911-bf00f03fe7ea}*SharedItemsImports = 4
 		src\Shared\Shared.projitems*{3f4cde5a-7667-46b1-b1c9-1d2a60a8591e}*SharedItemsImports = 4
 		src\Shared.Core\Shared.Core.projitems*{84788bac-2797-402b-b31c-e7031ecf0b90}*SharedItemsImports = 13
+		src\Shared.Core\Shared.Core.projitems*{95d3c2f8-47db-4b8d-b504-df1873c1da1f}*SharedItemsImports = 5
+		src\Shared\Shared.projitems*{95d3c2f8-47db-4b8d-b504-df1873c1da1f}*SharedItemsImports = 5
 		src\Shared\Shared.projitems*{97a6436e-5181-475f-b74e-e750d6f23f75}*SharedItemsImports = 13
 		src\Shared.Core\Shared.Core.projitems*{b65549a2-4991-424f-bd60-8e51857ef22e}*SharedItemsImports = 4
+		src\Shared.Core\Shared.Core.projitems*{bfc57e9a-f737-4011-9eaa-37e5e5016f99}*SharedItemsImports = 5
+		src\Shared\Shared.projitems*{bfc57e9a-f737-4011-9eaa-37e5e5016f99}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
