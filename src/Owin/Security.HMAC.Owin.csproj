@@ -8,9 +8,6 @@
     <Authors>Valdis Zobēla</Authors>
     <Company>If P&amp;C Insurance AS</Company>
     <Product>Security.HMAC</Product>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

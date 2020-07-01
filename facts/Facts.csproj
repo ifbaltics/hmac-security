@@ -5,7 +5,6 @@
     <IsPackable>false</IsPackable>
     <RootNamespace>Security.HMAC</RootNamespace>
     <AssemblyName>Security.HMAC.Facts</AssemblyName>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
