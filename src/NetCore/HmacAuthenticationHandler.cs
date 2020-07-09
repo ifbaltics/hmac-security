@@ -45,7 +45,11 @@ namespace Security.HMAC
         {
             HmacAuthenticationResult auth = authenticationService.Authenticate(Request.ToRequestInfo());
 
-            var claims = new[] { new Claim(ClaimTypes.NameIdentifier, auth.AppId) };
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, auth.AppId),
+                new Claim(ClaimTypes.AuthenticationMethod, Schemas.HMAC)
+            };
             ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity(claims, Scheme.Name));
             AuthenticationTicket ticket = new AuthenticationTicket(principal, Scheme.Name);
 
