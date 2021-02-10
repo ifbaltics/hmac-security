@@ -64,11 +64,21 @@ namespace Security.HMAC
             var signature = signingAlgorithm.Sign(secret, content.ToCanonicalString());
 
             request.Headers.Authorization = new AuthenticationHeaderValue(Schemas.HMAC, signature);
-            request.Headers.Add(Headers.XAppId, appId);
-            request.Headers.Add(Headers.XNonce, nonce);
+
+            SetHeader(request, Headers.XAppId, appId);
+            SetHeader(request, Headers.XNonce, nonce);
+
             request.Headers.Date = timestamp;
 
             return request;
+        }
+
+        private static void SetHeader(HttpRequestMessage request, string name, string value)
+        {
+            if (request.Headers.Contains(name))
+                request.Headers.Remove(name);
+
+            request.Headers.Add(name, value);
         }
 
         protected override HttpResponseMessage ProcessResponse(HttpResponseMessage response, CancellationToken cancellationToken) => response;
